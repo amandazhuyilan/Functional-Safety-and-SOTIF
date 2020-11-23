@@ -6,6 +6,7 @@ This repo contains notes and related coursework based on Functional Safety and S
 - __[Introduction](#introduction)__
 - __[Safety Standards](#safety-standards)__
 - __[Bayesian Network](#bayesian-network)__
+- __[Safety Cases](#safety-cases)__
 
 ## Introduction
 - __Functional Safety__ - Something that functions to keep the system safe.
@@ -108,3 +109,93 @@ If you are alive on 1st January, what is the possibility you will not be alive o
    - "I claim that X and here are my arguments".
 - For the interdepencies in a Fault Tree; Machine Learning (learning from data; anomaly detection (learning from human experts); project planning etc.
 - Tools: (commercial) [Hugin Expert](https://www.hugin.com/).
+
+## Safety Cases
+
+A Safety Case presents your argument as to why your system is sufficiently safe. The Safety Case must be prepared throughout the development.
+
+__[Definition by Chris Hobbs]__
+Also known as "Safey Assurance Case", consists of four elements:
+- Boundary of the system
+   - _My system includes ... and excludes ..._
+   - Is human operator included and trained? Is software updated included?
+- Claim of the system
+   - _I claim that my system, when used as described in the Safety Manual ..._
+   - Determining what to claim is difficult.
+- The Argument
+   - _I demonstrate that I meet my claims as follows ..._
+   - Build an argument without making collecting evidence for it
+      - Pitfall: Prone to "p-hacking" - hacking the _p_ value of your system without previous research, a practise where researchers select the analysis that gives a pleasing result. 
+- The Evidence
+   - _The evidence to back up my argument are as follows ..._
+
+__[Definition by ISO26262-10]__
+   _The purpose of a safety case is to provide a clear, comprehensive and defensible argument, supported by evidence, that an item is free from unreasonable risk when operated in an intended context._
+
+There are three principal elements of a safety case, namely:
+- __safety goals__ and related safety requirements (safety objectives of the item or element)
+-__safety argument__
+- the ISO 26262 series of standards work product (the __evidence__).
+
+[Definition by UL 4600 (draft)]
+The safety case shall be a structured explanation in the form of __goals__, supported by __arguments__ and __evidence__, that justifies that the item is acceptably safe within a defined operational design domain, and it covers the item's lifecycle.
+
+- The Safety Case shall used a defined, __consistent__ format for claims, arguments and evidence.
+- The evidence used shall conform to __defined__, __auditable__ formats.
+- The claims and arguments in the safety case shall be __clear__ and __consistent__.
+
+__[Table of Content for Safety Case by EN 50129]__
+- Part 1: Definition of a System (or sub-system / equipment)
+- Part 2: Quality management report
+- Part 3: Safety management report
+- Part 4: Technical safety report
+- Part 5: Related safety cases
+- Part 6: Conclusion
+
+   _This shall summarize the evidence presented in the previous parts of the Safety Case, and argue that the relevant system/sub-system/equipment is adequately safe, subject to compliance with the specified application conditions.
+
+### A Strategy
+1. Define the boundary of the system.
+2. Define the top-level claim.
+3. Build an argument without collecting evidence.
+4. Ask the auditor and other stakeholders: "if I gave you the evidence for this argument, would you be convinced?"
+5. Repeat from step 3 until everyone is satisfied.
+6. Collect the evidence.
+
+### Confirmation Bias
+We tend to only look got evidence that confirms what we already believe. Confirmation Bias makes it difficult for humans to create honest Safety Case.
+
+   _"The general root of superstition is that men observe when things hit, and not when they miss, and commit to memory the one, and pass over the other."_ -- Francis Bacon
+
+When a safety engineer is told to create a Safety Case to demonstrate that the system is safe, he will look for evidence that the system is _safe_. 
+
+To use Confirmation Bias positively, tell the engineer to list all the doubts he has about the system's safety, then try to eliminate those doubts.
+
+### Notations for Safety Case Arguments
+1. __Goal Structuring Notation__
+![Alt text](figures/GSN-example.png?raw=true)
+
+Limitations:
+- Not quantified - ex: the strength of the evidence, cannot say that one sub-argument is more important than the other one.
+- Cannot express doubt (See [_Eliminative Induction: A Basis for Arguing System Confidence_](https://resources.sei.cmu.edu/asset_files/ConferencePaper/2013_021_001_88010.pdf)).
+   - __Rebutting__ - claim or prove that (evidence or an accusation) is false.
+      - "_That claim is wrong, I can find a counter-example."_ 
+   - __Undermining__ - erode the base or foundation of something. 
+      - _"The evidence does not convince me."_
+   - __Undercutting__ - to damage something or to make it fail.
+      - _"The evidence is fine, but it does not support the claim."_
+
+
+2. __Bayesian Network___
+   A common pattern, _the strength of belief_.
+3. __Structured Assurance Case Metamodel (SACM)__ 
+An attempt by the Object Management Group to put together a set of classes of things for putting a safety case together.
+
+![Alt text](figures/SACM.png?raw=true)
+("Always incredibly dull." - Chris H.)
+
+SACM standardlizes the Safety Case notation and provides interoperability. Advantages:
+- Portability - export the safety case in XMI or XML for other SACM tools to import.
+- Definition of terms - SACM forces users to define terms, "what is sufficiently safe?"
+- Patterns/Templates - make the Safety Case more dummy-friendly (readable to inexperienced users)
+- Verification of Safety Cases - syntactically and semantically.
