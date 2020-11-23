@@ -2,7 +2,12 @@
 
 This repo contains notes and related coursework based on Functional Safety and SOTIF for embedded software offered by Chris Hobbs.
 
-## 1. Introduction
+## Content
+- ### [Introduction](#introduction)
+- ### [Safety Standards](#safety-standards)
+
+
+## Introduction
 - __Functional Safety__ - Something that functions to keep the system safe.
 - __Safety of the Intended Safety (SOTIF)__ - Everything worked as intended but a dangerous situation still occurred. 
 This is not covered in ISO26262, as ISO26262 defines "hazard" as "potential source of harm caused by malfuctioning behavior of an item."  
@@ -45,3 +50,49 @@ This is not covered in ISO26262, as ISO26262 defines "hazard" as "potential sour
    - software design and development,
    - the targeted area,
    - with safety standards and their applications. 
+
+## Safety Standards
+
+   "_Safety is demonstrated not by compliance with prescribed processes, but by accessing hazard, mitigating those hazards, and showing that the residual risk is acceptable._"
+
+__What's a Standard?__ - A number of tables.  
+
+### Some Safety Standards
+- Functional Safety: ISO 26262 (on road vehicles), EN 5012x (railways)
+- Medical devices: IEC 62304, ISO 14971
+- Safety of Intended Functionality (SOTIF) - ISO 21448 + UL 4600
+- Quality Management systems - ISO 9001 / ATF 16946 or ASPICE or CMMI.
+
+![Alt text](figures/safety-standards.png?raw=true)
+
+
+IEC 61508 is a foundation is a foundation for many market-specific standards, ISO 26262 for road vehicles and EN 5012x for railways.
+
+
+#### The Process of Certification and Accrediation
+1. Choose a certification body (TUV etc.) to ask for certification for a process and or a product.
+2. As the accreditation authority (ANSI - USA, Japan - JAB, Germany - DAkkS) accredits only certain certification bodies, make sure that the selected certification body is accredited by the expected accreditation authority.
+
+- __Safety Integrity Level (SIL)__ - How often can we tolerate failure of the safety function? It is divided into __Probability of Failure on Demand__ and __Probability of Failure per Hour__. SIL is used as acceptable levels determined by ALARP, GAMAB, MEM, Layers of Proection Analysis, Risk Graphs etc. 
+
+   |  SIL  | Probability of Failure on Demand  | Probability of Failure Per Hour  |
+   |-------|-----------------------------------|----------------------------------|
+   |   1   |        < 10 <sup>-1</sup>         |        < 10 <sup>-5</sup>        |
+   |   2   |        < 10 <sup>-2</sup>         |        < 10 <sup>-6</sup>        |
+   |   3   |        < 10 <sup>-3</sup>         |        < 10 <sup>-7</sup>        |
+   |   4   |        < 10 <sup>-4</sup>         |        < 10 <sup>-8</sup>        |
+
+
+- __As Low As Reasonably Practical (ALARP)__
+![Alt text](figures/ALARP.png?raw=true)
+
+- __Minimum Endogenous Mortaliy (MEM)__
+If you are alive on 1st January, what is the possibility you will not be alive on 31 December because of accidents (not diseases etc.) The value is usually 2 <sup>-4</sup>.
+
+#### Problem with Standards
+- __Expensive__ - ex: ~$2500 for ISO26262, with Single-Reader License. 
+- __Contradictory__ - both internally (ex: in ISO26262, Safety case is a list of artifacts, claim, argument and evidence) and between different standards (ex: ISO 29119 [requirement-based testing not sufficient] contradicts the approaches to verification in ISO 26262 and IEC 61508 [requirement-based testing]).
+- __Restrictive__ - ISO26262 only covers dangerous situations caused by malfunctions.
+- __Incorporate obsolete ideas__ - it takes about 10+ years to develop a standard, but software development is rapid. Neither ISO 26262 or IEC 61508 accepts random software failure.
+- __Driven by corporations__  - no more open standards of developments, replaced by "standardization by corporation" instead.
+- __Fragmented__ - ex: no single standard covering vehicle-to-vehicle communication.
