@@ -3,9 +3,9 @@
 This repo contains notes and related coursework based on Functional Safety and SOTIF for embedded software offered by Chris Hobbs.
 
 ## Content
-- ### [Introduction](#introduction)
-- ### [Safety Standards](#safety-standards)
-
+- __[Introduction](#introduction)__
+- __[Safety Standards](#safety-standards)__
+- __[Bayesian Network](#bayesian-network)__
 
 ## Introduction
 - __Functional Safety__ - Something that functions to keep the system safe.
@@ -50,6 +50,7 @@ This is not covered in ISO26262, as ISO26262 defines "hazard" as "potential sour
    - software design and development,
    - the targeted area,
    - with safety standards and their applications. 
+
 
 ## Safety Standards
 
@@ -96,3 +97,14 @@ If you are alive on 1st January, what is the possibility you will not be alive o
 - __Incorporate obsolete ideas__ - it takes about 10+ years to develop a standard, but software development is rapid. Neither ISO 26262 or IEC 61508 accepts random software failure.
 - __Driven by corporations__  - no more open standards of developments, replaced by "standardization by corporation" instead.
 - __Fragmented__ - ex: no single standard covering vehicle-to-vehicle communication.
+
+## Bayesian Network 
+### Bayes Theorem
+![Alt text](figures/bayesian-theorem.png?raw=true)
+- Allow us to work from effect to cause - X happened, what might have caused it?
+- Instead of talking about the probability of something happening, it talks about the strength of your belief in the event to be occured.
+## How to use a Bayesian Network?
+- For the arguments in a __Safety Case__(put together to explain why the system is sufficiently safe).
+   - "I claim that X and here are my arguments".
+- For the interdepencies in a Fault Tree; Machine Learning (learning from data; anomaly detection (learning from human experts); project planning etc.
+- Tools: (commercial) [Hugin Expert](https://www.hugin.com/).
