@@ -7,6 +7,9 @@ This repo contains notes and related coursework based on Functional Safety and S
 - __[Safety Standards](#safety-standards)__
 - __[Bayesian Network](#bayesian-network)__
 - __[Safety Cases](#safety-cases)__
+- __[Risk Analysis](#risk-analysis)__
+- __[Discrete-Event Simulation](#discrete-event-simulation)__
+- __[Programming Languages and Compilers](#programming-languages-and-compilers)__
 
 ## Introduction
 - __Functional Safety__ - Something that functions to keep the system safe.
@@ -199,3 +202,149 @@ SACM standardlizes the Safety Case notation and provides interoperability. Advan
 - Definition of terms - SACM forces users to define terms, "what is sufficiently safe?"
 - Patterns/Templates - make the Safety Case more dummy-friendly (readable to inexperienced users)
 - Verification of Safety Cases - syntactically and semantically.
+
+##
+
+## Discrete Event Simulation
+
+Old, semi-formal technique to produce statistical values for a deterministic problem - one that has an exact answer. 
+- It can be used to produce statistical values for a probabilistic problem.
+- It can be used to estimate system throughput, resource usage, availability, behaviour under error conditions and other factors.
+- It is recommended in IEC 61508 and ISO 26262 and considered essential in UL 4600.
+- It can be a source of system test cases.
+
+### Why model?
+- To verify an algorithm or protocol 
+   - ex: Will there be race conditions? Will this algorithm always produce the same answer? Can this system handle 2000 transaction per second?
+- To design a system
+   - how many buffers do I need to be 99% confident that there will be no buffer overflows?
+- To generate code and test cases
+
+### Why Simulate?
+We use simulation when you cannot handle the problem formally - simulation is a semi-formal method, where the computer pretends to be the system.
+
+Think of simulation as a rough-edged axe, and the formal method is a sharp sword for specific use cases.
+
+### Simulation from Safety Standards
+[From IEC 61508-7]
+__Aim__ - To simulate a real world phenomena by generating random numbers when analytical methods are not applicable.
+__Description__ - _Monte Carlo_ simulations are used to solve two classes of problems: 
+   - __Deterministic__ : where random numbers are used to generate a stochastic phenomena, and
+   - __Probabilistic__: whihch are mathematically translated into an equivalent probabilistic problem (e.g. integral calculations).
+
+[From ISO-26262]
+In ISO 26262, "Simulation of dynamic behavior of the design" is listed as one of the _methods for the verification of the software architectural design_.
+
+[From UL 4600 (draft)]
+__Simulation vs. Testing__
+_Autonomous item complexity is such that relying upon simulation results ... is typically a practical necessity. Simulation results can be used so long as their accuracy is justified, simulation run coverage is justified, and an appropriate non-zero amount of physical testing is used to validate simulation results.
+
+__Pitfall__
+Arguing low risk based upon unvalidated simulation results alone is prone to missing risks due to simulation defects, modelling faults, and simplications made in the abstraction process to create the simulation.
+
+### Types of Simulation
+- (Described in IEC 61508) Probabilitistic vs Deterministic
+- Transaction-Based ("birth -> death")
+   - Transaction enter system, enters a queue waiting for processor to be available, seizes a processor, is serviced ...
+- Event-Based
+   - System starts - schedule the "system fail" event
+   - System fails - schedule the "system repair" event
+
+### Discrete Event Simulation Tools
+- Common used Discrete-Event
+Simulation Language: [General Purpose Simlation System (GPSS)](http://www.cs.bilkent.edu.tr/~cagatay/cs503/_M&S_08_General_Purpose_Simulation_System.pdf).
+   - Example syntaxt: `GENERATE()`, `SEIZE()`, `RELEASE()`, `TERMINATE()`
+- process-based discrete-event simulation framework based on Python - [`simpy`](https://simpy.readthedocs.io/en/latest/).
+
+
+#### Confidence Interval
+- [_Student t Distribution_](https://en.wikipedia.org/wiki/Student%27s_t-distribution).
+It tells us how confident the simulation reflects the real system we are simulating.
+
+#### When to Start Simulating?
+When a system has a steady state - the simulation statistics should be reset once the system has a steady state. The simulation statistics should be reset once the system has reached a steady state.
+
+### Back-to-back Modelling
+
+As stated in ISO 26262, "Back-to-back comparison test between model and code, if applicable." is one of the listed methods for verification of software integration.
+#### Generate System-test cases
+1. Programmer produces a simulation model.
+2. Simulation is executed and lists events (in forms of traces).
+3. Traces are scanned and equivalence classes are extracted.
+4. Each equivalance class becomes a test program.
+5. Test programs are executed.
+6. Test results are used to improve the model.
+7. Return to step 2.
+
+## Programming Languages and Compilers
+ The choice of programming language can affect the amount of work you must do to produce a certified product:
+ - Some languages are more efficient to code;
+ - Some languages support better formal analysis;
+ - Some languages support more thorough static analysis;
+ - Some compliers (and libraries) are very difficult to qualify. 
+
+#### What is needed in a Language?
+- Fully-defined?
+- Procedual (`Ada`, `FORTRAN`, `ALGOL`, `C`, `C++`, `Java`, `Rust`) or Functional (`LISP`, `Scheme`, `Clojure`, `Haskell`...)?
+- Strong or weak typing?
+- Static or dynamic typing?
+- Write-once variable?
+- Very high-level? (Ex: C++ has a lot of things going behind the scenes: constructors etc.)
+- Object oriented?
+- Automatic garbage collection?
+   - Garbage collection: `Java`, `C#`, `Go`
+   - Garbage collecting / manual: `Ada`, `Modula3`, `C++`
+   - Manual: `C`
+- Exceptions or return codes (functional programming uses return codes):
+   - Function that finds the problem loses control of the exchange - connot force the caller to check the return code.
+   - An error return code must be something that cannot be a correct answer so it differs from function to function.
+- Support for formal contracts?
+- Long history of the compiler / linker?
+- Good for static analysis (no functional pointers!)?
+- Compiled to machine code or using VM?
+
+### Qualifying and Certifying
+We __certify__ a product, but we __qualify__ a tool. For a tool, the report will say something like:
+_This tool has been qualified as being suitable for use in developments in accordance with ISO 26262:2018 at ASILs up to ASIL C_.
+
+#### Tool Levels: ISO 26262 - Tool Confidence Levels
+- Impact Level: TI1 - no impact; TI2 - could impact.
+- Error Detection: TD1: almost certainly be noticed; TD2: probably noticed; TD3: other.
+
+#### Tools used in Development Process
+- Editors
+- Code and document repository
+   - how do you know that it's not losing code that you checked in?
+- Bug report system
+   - how do you know that it's not losing bugs you reported?
+- Build system
+   - how do you know that it is building from the latest source code?
+- Code and documenation review system
+   - how do you know that your reviews are not lost?
+- Compilers and assemblers
+   - how do you know that they are producing correct object code?
+   - __"Every compiler we tested was found to crash and also to silently generate wrong code when presented with valid input."__ --["Finding and Understanding Bugs in C Compilers"](https://www.cs.utah.edu/~regehr/papers/pldi11-preprint.pdf)
+      - With `IEEE 754` `float` (32 bits) there is no such number as 16777217.0.
+      - With `IEEE 754` `double` (64 bits) there is no such number as 9007199254740993.0.
+      - Finite-element analysis was carried out using 64-bit floating point number, the calculation was wrong by up to 47%.
+
+### Floating Point Operations
+Floating point operations are not always obvious. Using them in safety-critical calculations requires thought and analysis. In particular:
+- Never check that 2 floating point numbers are equal (why - internal error when rounding up of floating points).
+```cpp
+    // Correct method to compare 
+    // floating-point numbers 
+    if (abs(a - b) < 1e-9) { 
+        cout << "The numbers are equal "
+             << endl; 
+    } 
+    else { 
+        cout << "The numbers are not equal "
+             << endl; 
+    } 
+}
+```
+- Don't assume that using floating point integers will make a calculation accurate.
+- If possible, use integer arithmetic.
+- `unum` (universal numbers, originally from [_The End of Error_](https://www.amazon.com/End-Error-Computing-Chapman-Computational/dp/1482239868)), but not supported by hardware.
+- `unum` is a variable length floating-point format that is able to keep track of the precision during operations, offering better result reliability than [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754#:~:text=The%20IEEE%20Standard%20for%20Floating,and%20Electronics%20Engineers%20(IEEE).&text=Many%20hardware%20floating%2Dpoint%20units%20use%20the%20IEEE%20754%20standard.).
